@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MusicBot - Диалоговая система о музыке</title>
+  <script src="https://cdn.tailwindcss.com"></script>>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex flex-col text-white">
+  <button id="toggleSidebar" class="toggle-btn">
+    <i class="fas fa-bars"></i>
+  </button>
+   <div class="fixed top-1rem right-0.5rem flex items-center space-x-2 z-10" id="authButtons">
+    <a href="login.html" class="auth-btn">
+
+      <i class="fas fa-sign-in-alt"></i> Авторизация
+    </a>
+    <a href="register.html" class="auth-btn">
+      <i class="fas fa-user-plus"></i> Регистрация
+    </a>
+  </div>
+
+  <div id="settingsModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40">
+    <div class="modal-content bg-gray-800 rounded-lg p-6 w-full max-w-lg flex">
+      <div class="settings-menu w-1/3 bg-gray-900 rounded-l-lg p-4 flex flex-col space-y-2">
+        <button id="profileOption" class="settings-menu-btn text-left px-4 py-2 text-white bg-gray-700 rounded-lg hover:bg-gray-600">Настроить профиль</button>
+        <button id="themeOption" class="settings-menu-btn text-left px-4 py-2 text-white hover:bg-gray-600 rounded-lg">Выбрать тему</button>
+      </div>
+      <div class="settings-content w-2/3 p-4">
+        <h2 class="text-xl font-bold mb-4">Настройки</h2>
+        <div id="settingsContent" class="space-y-4">
+          <div id="profileContent">
+            <p class="text-gray-300"><span class="font-semibold">Имя:</span> Гость</p>
+            <p class="text-gray-300"><span class="font-semibold">Email:</span> не задан</p>
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button id="settingsCancel" class="p-3 bg-gray-600 rounded-lg hover:bg-gray-700 transition-colors">Отмена</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="loginModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40">
+    <div class="modal-content bg-gray-800 rounded-lg p-6 w-full max-w-md">
+      <h2 class="text-xl font-bold mb-4">Авторизация</h2>
+      <div class="space-y-4">
+        <input type="text" id="loginUsername" placeholder="Логин" class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500">
+        <input type="password" id="loginPassword" placeholder="Пароль" class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500">
+        <div class="flex justify-end space-x-2">
+          <button id="loginCancel" class="p-3 bg-gray-600 rounded-lg hover:bg-gray-700 transition-colors">Отмена</button>
+          <button id="loginSubmit" class="p-3 bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors">Войти</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="registerModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40">
+    <div class="modal-content bg-gray-800 rounded-lg p-6 w-full max-w-md">
+      <h2 class="text-xl font-bold mb-4">Регистрация</h2>
+      <div class="space-y-4">
+        <input type="text" id="registerUsername" placeholder="Логин" class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500">
+        <input type="password" id="registerPassword" placeholder="Пароль" class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500">
+        <input type="password" id="registerConfirmPassword" placeholder="Подтвердите пароль" class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500">
+        <div class="flex justify-end space-x-2">
+          <button id="registerCancel" class="p-3 bg-gray-600 rounded-lg hover:bg-gray-700 transition-colors">Отмена</button>
+          <button id="registerSubmit" class="p-3 bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors">Зарегистрироваться</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header class="w-full py-4 bg-gray-900/50 px-4 flex items-start justify-between relative">
+  <div class="mt-6 ml-2">
+    <img src="icon.png" alt="Логотип MusicBot" class="h-24 w-24 object-contain">
+  </div>
+
+  <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+    <h1 class="text-3xl font-bold text-white leading-none">MusicBot</h1>
+    <p class="text-sm text-gray-300 leading-tight">Ваш персональный музыкальный ассистент!</p>
+  </div>
+
+  <div class="w-16"></div>
+</header>
+
+  <main class="flex-1 w-full max-w-4xl p-4 mx-auto">
+    <div class="chat-container bg-gray-800/80 rounded-lg p-4 shadow-lg">
+      <div id="chatMessages" class="space-y-4">
+        <div class="chat-message bot-message flex items-start space-x-2">
+          <i class="fas fa-robot text-purple-400 mt-1"></i>
+          <div class="bg-gray-700 rounded-lg p-3 max-w-lg">
+            Привет! Я MusicBot на основе LLaMA 3 8B (q4_0). Работаю в оптимизированном режиме. Спрашивай о музыке!'
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="w-full max-w-4xl p-4 mx-auto">
+    <div class="suggestions flex flex-wrap gap-2 mb-4">
+      <button class="suggestion-btn" data-query="Найди песни в жанре рок">Найди песни в жанре рок</button>
+      <button class="suggestion-btn" data-query="Расскажи про поп-музыку">Расскажи про поп-музыку</button>
+      <button class="suggestion-btn" data-query="Посоветуй плейлист для отдыха">Посоветуй плейлист для отдыха</button>
+      <button class="suggestion-btn" data-query="Что сейчас в тренде?">Что сейчас в тренде?</button>
+    </div>
+    <div class="flex items-center space-x-2">
+      <input
+        id="userInput"
+        type="text"
+        placeholder="Спросите что-нибудь..."
+        class="flex-1 p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+      >
+      <button
+        id="sendButton"
+        class="p-3 bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors"
+      >
+        <i class="fas fa-paper-plane"></i>
+      </button>
+      <button
+        id="voiceButton"
+        class="p-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        <i class="fas fa-microphone"></i>
+      </button>
+    </div>
+  </footer>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-bold text-white">История чатов</h2>
+      <button id="newChatButton" class="new-chat-btn">
+        <i class="fas fa-plus"></i> Новый чат
+      </button>
+    </div>
+    <div id="chatHistoryList" class="space-y-2 flex-1">
+      <p class="history-empty">История чатов пуста</p>
+    </div>
+    <div class="user-account mt-4 flex items-center space-x-3 cursor-pointer relative">
+      <div class="avatar w-10 h-10 bg-gray-600 rounded-full"></div>
+      <span class="text-white font-medium">Гость</span>
+      <div id="profileMenu" class="profile-menu hidden absolute bottom-full mb-2 right-0 bg-gray-700 rounded-lg shadow-lg z-50">
+        <button id="settingsOption" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-600 rounded-t-lg">Настройки</button>
+        <button id="logoutOption" class="block w-full text-left px-4 py-2 text-white hover:bg-gray-600 rounded-b-lg">Выйти</button>
+      </div>
+    </div>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/postgres@3.0.2/dist/postgres.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
